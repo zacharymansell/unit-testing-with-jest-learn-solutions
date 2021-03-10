@@ -35,9 +35,42 @@ describe('VendingMachine', () => {
     const item = new Item('pop', 1, 101)
     machine.stock([item])
     expect(machine.snacks[0]).toEqual(item)
+
+    const anotherItem = new Item('coke', 3, 102)
+    machine.stock([anotherItem])
+    expect(machine.snacks).toEqual([item, anotherItem])
   })
 
   test('see selections should should return an array of added snacks', () => {
+    const item = new Item('harry potter book', 1, 101)
+    machine.stock([item])
+    expect(machine.seeSelections()).toEqual([item])
+  })
 
+  it('should update the internal balance property when money is deposited', () => {
+    machine.deposit(100);
+    expect(machine.balance).toEqual(100)
+
+    machine.deposit(1);
+    expect(machine.balance).toEqual(101)
+  })
+
+  test('that buy() alerts a customer when a snack is unavailable', () => {
+    expect(machine.buy('tabloid')).toEqual('snack is unavailable');
+  })
+
+  test('that buy() updates inventory with bought snacks', () => {
+    const item = new Item('toy train', 300, 1)
+    const item2 = new Item('toy train', 300, 2)
+    machine.stock([item, item2])
+    machine.buy('toy train')
+    expect(machine.snacks).toEqual([item2])
+  })
+
+  test('that buy() adds the price of the snack to the VM balance', () => {
+    const item = new Item('katsu sando', 3, 1)
+    machine.stock([item])
+    machine.buy('katsu sando')
+    expect(machine.balance).toEqual(3)
   })
 })

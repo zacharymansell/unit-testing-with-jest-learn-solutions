@@ -34,13 +34,27 @@ class VendingMachine {
 
   deposit(amount) {
     // should update balance with amount deposited
+    this.balance += amount;
   }
 
   buy(snackName) {
+    let hasSnack = false;
+    let index = null
     // should update inventory with bought snacks
     // update balance based on snack price
     // should notify customer when a snack is unavailable
+    for (let i = 0; i < this.snacks.length; i += 1) {
+      const s = this.snacks[i]
+      if (s.name === snackName) {
+        hasSnack = true
+        this.balance += s.price;
+        index = i;
+        break;
+      };
+    }
     // should notify customer when a snack cost more than available balance
+    if (hasSnack === false) return 'snack is unavailable'
+    if (hasSnack) this.snacks.splice(index, 1)
   }
 }
 
