@@ -62,15 +62,24 @@ describe('VendingMachine', () => {
   test('that buy() updates inventory with bought snacks', () => {
     const item = new Item('toy train', 300, 1)
     const item2 = new Item('toy train', 300, 2)
+    machine.deposit(600)
     machine.stock([item, item2])
     machine.buy('toy train')
     expect(machine.snacks).toEqual([item2])
   })
 
-  test('that buy() adds the price of the snack to the VM balance', () => {
+  test('that buy() alerts a customer if a snack costs more than their available balance', () => {
     const item = new Item('katsu sando', 3, 1)
     machine.stock([item])
-    machine.buy('katsu sando')
-    expect(machine.balance).toEqual(3)
+    machine.deposit(1);
+    expect(() => machine.buy('katsu sando')).toThrow(/snack costs more than available balance/)
+  })
+
+  it('should update the balance based on the snack price', () => {
+    const item = new Item('snickers bar', 5, 1)
+    machine.stock([item])
+    machine.deposit(10);
+    machine.buy('snickers bar');
+    expect(machine.balance).toBe(5)
   })
 })

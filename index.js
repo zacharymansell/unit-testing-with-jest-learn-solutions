@@ -38,23 +38,21 @@ class VendingMachine {
   }
 
   buy(snackName) {
-    let hasSnack = false;
-    let index = null
-    // should update inventory with bought snacks
-    // update balance based on snack price
-    // should notify customer when a snack is unavailable
     for (let i = 0; i < this.snacks.length; i += 1) {
-      const s = this.snacks[i]
-      if (s.name === snackName) {
-        hasSnack = true
-        this.balance += s.price;
-        index = i;
-        break;
+      const {name, price} = this.snacks[i]
+      if (name === snackName) {
+        // should notify customer when a snack cost more than available balance
+        if (this.balance < price) throw new Error('snack costs more than available balance')
+
+        // update balance based on snack price
+        this.deposit(-price);
+
+        // should update inventory with bought snacks
+        return this.snacks.splice(i, 1)
       };
     }
-    // should notify customer when a snack cost more than available balance
-    if (hasSnack === false) return 'snack is unavailable'
-    if (hasSnack) this.snacks.splice(index, 1)
+    // should notify customer when a snack is unavailable
+    return 'snack is unavailable';
   }
 }
 
